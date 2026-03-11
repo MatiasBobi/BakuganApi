@@ -1,0 +1,23 @@
+7version: '3.8'
+services:
+  bakugan-api:
+    image: bakuganapi:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sql-db,1433;Database=BakuganDb;User Id=sa;Password=YourStrong@Pass123;TrustServerCertificate=true
+    depends_on:
+      - sql-db
+  
+  sql-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Pass123
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+volumes:
+  sql_data:

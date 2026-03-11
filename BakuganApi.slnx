@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../BakuganApiTest/BakuganApiTest.csproj" Id="0b1fb896-2baa-460a-a969-e2b0e3b89ff2" />
+  <Project Path="BakuganApi.csproj" />
+</Solution>
