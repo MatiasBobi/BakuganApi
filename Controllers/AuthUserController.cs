@@ -12,7 +12,7 @@ using BakuganApi.services;
 
 namespace BakuganApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
     [AllowAnonymous]
     public class AuthUserController : ControllerBase
@@ -52,7 +52,7 @@ namespace BakuganApi.Controllers
             
         }
 
-        [HttpPost("/login")]
+        [HttpPost("login")]
 
         public async Task<ActionResult<string>> LoginUsuario(loginDto loginDto)
         {
