@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Registro de servicios
 builder.Services.AddScoped<IBakuganService, BakuganService>();
-builder.Services.AddScoped<UsuariosService>();
+builder.Services.AddScoped<IUsuarioService, UsuariosService>();
 //
 
 // Singleton de utilidades
