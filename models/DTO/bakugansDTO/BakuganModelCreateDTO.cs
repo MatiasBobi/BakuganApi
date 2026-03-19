@@ -13,5 +13,7 @@ namespace BakuganApi.models.DTO.bakugansDTO
 
         [Required(ErrorMessage = "El precio del bakugan es obligatorio.")]
         public decimal Precio { get; set; }
+        [Required(ErrorMessage = "La categoria del bakugan es obligatorio.")]
+        public required EBakuganCategoria Category { get; set; }
     }
 }

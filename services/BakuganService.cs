@@ -62,7 +62,9 @@ public class BakuganService : IBakuganService
             var bakugan = new BakuganModel
             {
                 Nombre = dto.Nombre.Trim(),
-                Tipo = dto.Tipo
+                Tipo = dto.Tipo,
+                Category = dto.Category,
+                Precio = dto.Precio
             };
 
             _context.Bakugans.Add(bakugan);
@@ -79,7 +81,6 @@ public class BakuganService : IBakuganService
                 Nombre = bakugan.Nombre,
                 Tipo = bakugan.Tipo,
                 Habilidades = new(),
-                Categories = new()
             };
         
     }
@@ -96,8 +97,6 @@ public class BakuganService : IBakuganService
 
             var bakugan = await _context.Bakugans
                 .Include(h => h.Habilidades)
-                .Include(c => c.Categories)
-                .Include(u => u.Usuarios)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             if (bakugan == null)
@@ -120,7 +119,6 @@ public class BakuganService : IBakuganService
 
             return await _context.Bakugans
                 .Include(h => h.Habilidades)
-                .Include(c => c.Categories)
                 .Select(b => new BakuganDetailDTO
                 {
                     Id = b.Id,
@@ -161,7 +159,7 @@ public class BakuganService : IBakuganService
 
             if (bakuganModel.Nombre != null) {
 
-                if (string.IsNullOrWhiteSpace(bakuganModel.Nombre)) {
+                if (string.IsNullOrEmpty(bakuganModel.Nombre)) {
                     throw new ArgumentException("El nombre no puede estar vacío.");
                 }
                 
@@ -179,6 +177,15 @@ public class BakuganService : IBakuganService
                     bakugan.Nombre = bakuganModel.Nombre.Trim();
                 }
             }
+            if (bakuganModel.Category.HasValue)
+            {
+                if(!Enum.IsDefined(typeof(EBakuganCategoria), bakuganModel.Category.Value))
+                {
+                    throw new ArgumentException("El tipo de bakugan no es valido.");
+                }
+                bakugan.Category = bakuganModel.Category.Value; 
+            }
+
 
             if (bakuganModel.Tipo.HasValue)
             {

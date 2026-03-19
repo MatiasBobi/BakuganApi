@@ -10,5 +10,7 @@ namespace BakuganApi.models.DTO.bakugansDTO
 
         public decimal? Precio { get; set; }
 
+        public EBakuganCategoria? Category { get; set; }
+
     }
 }

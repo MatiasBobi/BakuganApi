@@ -22,10 +22,10 @@ public class BakuganController : ControllerBase
         _bakuganService = bakuganService;
     }
 
-    [HttpGet]
+    [HttpGet("AllBakugans")]
 
     // ***** Obtener todos los Bakugans *****
-    public async Task<ActionResult<List<BakuganModel>>> ObtenerBakugans()
+    public async Task<ActionResult<List<BakuganDetailDTO>>> ObtenerBakugans()
     {
         try
         {
@@ -93,12 +93,12 @@ public class BakuganController : ControllerBase
     }
 
     // ***** Obtener Bakugan por ID *****
-    [HttpGet("{id}")]
-    public async Task<ActionResult<BakuganModel>> ObtenerBakuganPorId(int id)
+    [HttpGet("{bakuganId}")]
+    public async Task<ActionResult<BakuganModel>> ObtenerBakuganPorId(int bakuganId)
     {
         try
         {
-            var bakugan = await _bakuganService.TraerBakuganPorIdServicio(id);
+            var bakugan = await _bakuganService.TraerBakuganPorIdServicio(bakuganId);
 
             return Ok(bakugan);
         }
@@ -121,14 +121,14 @@ public class BakuganController : ControllerBase
     }
     // ***** Actualizar el nombre y tipo de un Bakugan *****
     [Authorize(Roles = "Admin")]
-    [HttpPatch("update_info/{id}")]
+    [HttpPatch("update_info/{bakuganId}")]
 
-    public async Task<ActionResult<BakuganUpdateDTO>> ActualizarBakugan(int id, BakuganUpdateDTO bakuganUpdate)
+    public async Task<ActionResult<BakuganUpdateDTO>> ActualizarBakugan(int bakuganId, BakuganUpdateDTO bakuganUpdate)
     {
         try
         {
-            var bakugan = await _bakuganService.ModificarBakuganServicio(id, bakuganUpdate);
-            return Ok("Bakugan actualizado correctamente.");
+            var bakugan = await _bakuganService.ModificarBakuganServicio(bakuganId, bakuganUpdate);
+            return Ok(new { mensaje = "Bakugan actualizado correctamente.", data = bakugan });
         }
         catch (ArgumentException ex)
         {
@@ -151,7 +151,7 @@ public class BakuganController : ControllerBase
 
     // ***** Eliminar un Bakugan *****
     [Authorize(Roles = "Admin")]
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("delete/{bakuganId}")]
 
     public async Task<ActionResult> ElminarBakugan(int bakuganId)
     {
@@ -159,8 +159,11 @@ public class BakuganController : ControllerBase
         {
             bool resultado = await _bakuganService.BorrarBakuganServicio(bakuganId);
 
+            if (resultado)
+            {
                 return Ok("Bakugan eliminado correctamente.");
-
+            }
+            throw new Exception("ERROR AL BORRAR.");
         }
         catch (ArgumentException ex)
         {
@@ -184,13 +187,13 @@ public class BakuganController : ControllerBase
 
     // ***** Agregar una nueva habilidad a un Bakugan *****
     [Authorize(Roles = "Admin")]
-    [HttpPost("/skills/add/{id}")]
-    public async Task<ActionResult<BakuganSkillModel>> AgregarSkill(int bakuganId, BakuganSkillAddDTO skillCreate)
+    [HttpPost("skills/add/{bakuganId}")]
+    public async Task<ActionResult<BakuganSkillDetailDTO>> AgregarSkill( int bakuganId, BakuganSkillAddDTO skillCreate)
     {
         try
         {
             var skill = await _bakuganService.AgregarSkillServicio(bakuganId, skillCreate);
-            return Ok("Habilidad agregada correctamente.");
+            return Ok(new { mensaje = "Skill agregada correctamente.", data = skill });
         }
         catch (ArgumentException ex)
         {
@@ -214,13 +217,13 @@ public class BakuganController : ControllerBase
 
     // ***** Actualizar una habilidad de un Bakugan *****
     [Authorize(Roles = "Admin")]
-    [HttpPatch("/skills/update/{bakuganId}/{skillid}")]
-    public async Task<ActionResult<BakuganSkillModel>> ActualizarSkill(int bakuganId, int skillid, BakuganSkillUpdateDTO skillUpdateDTO)
+    [HttpPatch("skills/update/{bakuganId}/{skillId}")]
+    public async Task<ActionResult<BakuganSkillDetailDTO>> ActualizarSkill(int bakuganId, int skillId, BakuganSkillUpdateDTO skillUpdateDTO)
     {
         try
         {
-            var skill = await _bakuganService.ActualizarSkillServicio(bakuganId, skillid, skillUpdateDTO);
-            return Ok("Habilidad actualizada correctamente.");
+            var skill = await _bakuganService.ActualizarSkillServicio(bakuganId, skillId, skillUpdateDTO);
+            return Ok(new {mensaje = "Habilidad actualizada correctamente." , data = skill});
         }
 
         catch (ArgumentException ex)
@@ -243,7 +246,7 @@ public class BakuganController : ControllerBase
 
     // ***** Obtener habilidades de un Bakugan *****
 
-    [HttpGet("/skills/{bakuganId}")]
+    [HttpGet("skills/{bakuganId}")]
 
     public async Task<ActionResult<BakuganSkillDetailDTO>> ObtenerSkillsBakugan(int bakuganId)
     {

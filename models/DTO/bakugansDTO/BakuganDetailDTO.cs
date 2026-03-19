@@ -13,6 +13,6 @@ namespace BakuganApi.models.DTO.bakugansDTO
         public decimal Precio { get; set; }
 
         public List<BakuganSkillDetailDTO> Habilidades { get; set; } = new List<BakuganSkillDetailDTO>();
-        public List<BakuganCategory> Categories { get; set; } = new List<BakuganCategory>();
+        public EBakuganCategoria? Category { get; set; }
     }
 }

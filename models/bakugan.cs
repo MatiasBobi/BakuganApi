@@ -18,8 +18,8 @@ public class BakuganModel
     // 1-N hacia Skills de cada bakugan, un bakugan puede tener muchas habilidades.
     public List<BakuganSkillModel> Habilidades { get; set; } = new List<BakuganSkillModel>();
 
-    // Relacion N - N Bakugans - Categories
-    public List<BakuganCategory> Categories { get; set; } = new List<BakuganCategory>();
+    // Categorias
+    public required EBakuganCategoria Category { get; set; }
 
     // Relacion N - N : Muchos bakugans pueden pertenecer varios usuarios y viceversa.
     public List<Usuario> Usuarios { get; set; } = new List<Usuario>();

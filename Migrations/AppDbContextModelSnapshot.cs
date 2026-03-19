@@ -29,6 +29,12 @@ namespace BakuganApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BakuganCategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("text");
@@ -41,6 +47,8 @@ namespace BakuganApi.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BakuganCategoryId");
 
                     b.ToTable("Bakugans");
                 });
@@ -123,21 +131,6 @@ namespace BakuganApi.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("BakuganCategoryBakuganModel", b =>
-                {
-                    b.Property<int>("BakugansId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("BakugansId", "CategoriesId");
-
-                    b.HasIndex("CategoriesId");
-
-                    b.ToTable("BakuganCategoryBakuganModel");
-                });
-
             modelBuilder.Entity("BakuganModelUsuario", b =>
                 {
                     b.Property<int>("BakugansId")
@@ -153,6 +146,13 @@ namespace BakuganApi.Migrations
                     b.ToTable("BakuganModelUsuario");
                 });
 
+            modelBuilder.Entity("BakuganAPI.Models.BakuganModel", b =>
+                {
+                    b.HasOne("BakuganApi.models.BakuganCategory", null)
+                        .WithMany("Bakugans")
+                        .HasForeignKey("BakuganCategoryId");
+                });
+
             modelBuilder.Entity("BakuganAPI.Models.BakuganSkillModel", b =>
                 {
                     b.HasOne("BakuganAPI.Models.BakuganModel", "Bakugan")
@@ -162,21 +162,6 @@ namespace BakuganApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Bakugan");
-                });
-
-            modelBuilder.Entity("BakuganCategoryBakuganModel", b =>
-                {
-                    b.HasOne("BakuganAPI.Models.BakuganModel", null)
-                        .WithMany()
-                        .HasForeignKey("BakugansId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BakuganApi.models.BakuganCategory", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("BakuganModelUsuario", b =>
@@ -197,6 +182,11 @@ namespace BakuganApi.Migrations
             modelBuilder.Entity("BakuganAPI.Models.BakuganModel", b =>
                 {
                     b.Navigation("Habilidades");
+                });
+
+            modelBuilder.Entity("BakuganApi.models.BakuganCategory", b =>
+                {
+                    b.Navigation("Bakugans");
                 });
 #pragma warning restore 612, 618
         }
